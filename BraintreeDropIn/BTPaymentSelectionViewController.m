@@ -413,9 +413,13 @@
         }
         
         [[BTTokenizationService sharedService] tokenizeType:@"PayPal" options:options withAPIClient:self.apiClient completion:^(BTPaymentMethodNonce * _Nullable paymentMethodNonce, NSError * _Nullable error) {
-            if (self.delegate && paymentMethodNonce != nil) {
-                BTUIKPaymentOptionType type = [BTUIKViewUtil paymentOptionTypeForPaymentInfoType:paymentMethodNonce.type];
-                [self.delegate selectionCompletedWithPaymentMethodType:type nonce:paymentMethodNonce error:error];
+            if (self.delegate) {
+                if (paymentMethodNonce != nil) {
+                    BTUIKPaymentOptionType type = [BTUIKViewUtil paymentOptionTypeForPaymentInfoType:paymentMethodNonce.type];
+                    [self.delegate selectionCompletedWithPaymentMethodType:type nonce:paymentMethodNonce error:error];
+                } else {
+                    [self.delegate selectionCompletedWithPaymentMethodType:BTUIKPaymentOptionTypePayPal nonce:nil error:nil];
+                }
             }
         }];
         
